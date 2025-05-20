@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { AuthContext } from '../providers/AuthProvider';
+import axios from 'axios';
 
 const Register = () => {
   const { createUser, updateUserProfile } = useContext(AuthContext);
@@ -30,11 +31,16 @@ const Register = () => {
     }
 
     try {
-      const res = await createUser(email, password);
+      const {res} = await createUser(email, password);
       await updateUserProfile({
         displayName: name,
         photoURL: photo,
       });
+
+      // ✅ Send to MongoDB via backend
+      const userInfo = { name, email, photo };
+      await axios.post('http://localhost:5000/users', userInfo);
+
       toast.success('Registration successful!');
       navigate('/');
     } catch (err) {
