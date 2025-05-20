@@ -14,9 +14,9 @@ const Register = () => {
     setError('');
 
     const form = e.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const photo = form.photo.value;
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const photo = form.photo.value.trim();
     const password = form.password.value;
 
     // Password validation
@@ -25,19 +25,22 @@ const Register = () => {
     const isLengthValid = password.length >= 6;
 
     if (!hasUpperCase || !hasLowerCase || !isLengthValid) {
-      setError('Password must have 1 uppercase, 1 lowercase letter, and be at least 6 characters.');
+      setError('Password must have at least 1 uppercase, 1 lowercase letter, and be at least 6 characters.');
       toast.error('Invalid Password!');
       return;
     }
 
     try {
-      const {res} = await createUser(email, password);
+      // Create user
+      const userCredential = await createUser(email, password);
+
+      // Update user profile with display name and photo URL (optional)
       await updateUserProfile({
         displayName: name,
-        photoURL: photo,
+        photoURL: photo || '',
       });
 
-      // ✅ Send to MongoDB via backend
+      // Save user info to MongoDB
       const userInfo = { name, email, photo };
       await axios.post('http://localhost:5000/users', userInfo);
 
@@ -45,12 +48,13 @@ const Register = () => {
       navigate('/');
     } catch (err) {
       console.error(err.message);
-      setError('Registration failed. Email may already be used.');
+      setError('Registration failed. Email may already be used or other error.');
+      toast.error('Registration failed!');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
+    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
       <div className="card w-full max-w-md bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="text-2xl font-bold text-center mb-4">Create an Account</h2>
@@ -60,40 +64,67 @@ const Register = () => {
               <label className="label">
                 <span className="label-text">Name</span>
               </label>
-              <input type="text" name="name" placeholder="Your Name" className="input input-bordered" required />
+              <input
+                type="text"
+                name="name"
+                placeholder="Your Name"
+                className="input input-bordered"
+                required
+              />
             </div>
 
             <div className="form-control mb-3">
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
-              <input type="email" name="email" placeholder="Your Email" className="input input-bordered" required />
+              <input
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                className="input input-bordered"
+                required
+              />
             </div>
 
             <div className="form-control mb-3">
               <label className="label">
                 <span className="label-text">Photo URL</span>
               </label>
-              <input type="text" name="photo" placeholder="Photo URL (optional)" className="input input-bordered" />
+              <input
+                type="text"
+                name="photo"
+                placeholder="Photo URL (optional)"
+                className="input input-bordered"
+              />
             </div>
 
             <div className="form-control mb-4">
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
-              <input type="password" name="password" placeholder="Enter strong password" className="input input-bordered" required />
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter strong password"
+                className="input input-bordered"
+                required
+              />
             </div>
 
             {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
             <div className="form-control">
-              <button type="submit" className="btn btn-primary w-full">Register</button>
+              <button type="submit" className="btn btn-primary w-full">
+                Register
+              </button>
             </div>
           </form>
 
           <p className="text-sm text-center mt-4">
             Already have an account?
-            <Link to="/login" className="text-blue-600 font-semibold ml-1 hover:underline">Login here</Link>
+            <Link to="/login" className="text-blue-600 font-semibold ml-1 hover:underline">
+              Login here
+            </Link>
           </p>
         </div>
       </div>
