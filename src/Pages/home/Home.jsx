@@ -5,12 +5,21 @@ import PopularHobbies from './PopularHobbies';
 
 const Home = () => {
   return (
-    <div className="space-y-10">
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
       <BannerSlider />
-      <FeaturedGroups />
-      <WhyJoin />
-      <PopularHobbies />
-    </div>
+
+      <section>
+        <FeaturedGroups />
+      </section>
+
+      <section className="bg-blue-50 rounded-lg shadow-md py-10 px-6">
+        <WhyJoin />
+      </section>
+
+      <section className="bg-gray-50 rounded-lg shadow-md py-10 px-6">
+        <PopularHobbies />
+      </section>
+    </main>
   );
 };
 
