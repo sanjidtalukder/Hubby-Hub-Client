@@ -1,11 +1,15 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const MainLayout = () => {
   return (
     <div>
-      <h1>HobbyHub</h1>
-      <Outlet /> {/* Nested route গুলো এখানে render হবে */}
+     
+      <Navbar></Navbar>
+      <Outlet /> 
+      <Footer></Footer>
     </div>
   );
 };
