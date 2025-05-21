@@ -13,44 +13,25 @@ const Navbar = () => {
       .catch(err => console.error(err));
   };
 
+  const linkClass = ({ isActive }) =>
+    `btn btn-ghost text-base font-medium rounded-md transition duration-300 ${
+      isActive ? 'bg-blue-100 text-blue-700 font-semibold underline' : ''
+    }`;
+
   const navLinks = (
     <>
-      <NavLink
-        to="/"
-        className={({ isActive }) =>
-          `btn btn-ghost text-base font-medium ${isActive ? 'btn-active bg-blue-100 text-blue-700' : ''}`
-        }
-        onClick={() => setMenuOpen(false)}
-      >
+      <NavLink to="/" className={linkClass} onClick={() => setMenuOpen(false)}>
         Home
       </NavLink>
-      <NavLink
-        to="/groups"
-        className={({ isActive }) =>
-          `btn btn-ghost text-base font-medium ${isActive ? 'btn-active bg-blue-100 text-blue-700' : ''}`
-        }
-        onClick={() => setMenuOpen(false)}
-      >
+      <NavLink to="/groups" className={linkClass} onClick={() => setMenuOpen(false)}>
         All Groups
       </NavLink>
       {user && (
         <>
-          <NavLink
-            to="/create-group"
-            className={({ isActive }) =>
-              `btn btn-ghost text-base font-medium ${isActive ? 'btn-active bg-blue-100 text-blue-700' : ''}`
-            }
-            onClick={() => setMenuOpen(false)}
-          >
+          <NavLink to="/create-group" className={linkClass} onClick={() => setMenuOpen(false)}>
             Create Group
           </NavLink>
-          <NavLink
-            to="/my-groups"
-            className={({ isActive }) =>
-              `btn btn-ghost text-base font-medium ${isActive ? 'btn-active bg-blue-100 text-blue-700' : ''}`
-            }
-            onClick={() => setMenuOpen(false)}
-          >
+          <NavLink to="/my-groups" className={linkClass} onClick={() => setMenuOpen(false)}>
             My Groups
           </NavLink>
         </>
@@ -61,7 +42,7 @@ const Navbar = () => {
   return (
     <nav className="navbar bg-white shadow-md px-6 py-3 sticky top-0 z-50">
       <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
-        {/* Left: Logo */}
+        {/* Logo */}
         <div className="flex-1 flex items-center">
           <Link
             to="/"
@@ -72,15 +53,15 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Center: NavLinks */}
+        {/* Center Links (Desktop) */}
         <div className="flex-1 justify-center hidden md:flex items-center gap-4">
           {navLinks}
         </div>
 
-        {/* Right: User / Auth Buttons */}
+        {/* Right Side */}
         <div className="flex-1 flex justify-end items-center gap-4">
           {/* Mobile Hamburger */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden">
             <button
               className="btn btn-square btn-ghost text-xl"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -90,7 +71,7 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Desktop User Avatar */}
+          {/* User Avatar (Desktop) */}
           {user && (
             <div className="hidden md:flex dropdown dropdown-end ml-4">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar cursor-pointer relative group">
@@ -124,7 +105,7 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* Guest Buttons on Desktop */}
+          {/* Login/Register (Desktop) */}
           {!user && (
             <div className="hidden md:flex gap-2 ml-4">
               <NavLink to="/login" className="btn btn-outline btn-sm">
@@ -144,33 +125,23 @@ const Navbar = () => {
           {navLinks}
           {!user ? (
             <>
-              <NavLink
-                to="/login"
-                className="btn btn-outline btn-sm w-full text-center"
-                onClick={() => setMenuOpen(false)}
-              >
+              <NavLink to="/login" className="btn btn-outline btn-sm w-full" onClick={() => setMenuOpen(false)}>
                 Login
               </NavLink>
-              <NavLink
-                to="/register"
-                className="btn btn-primary btn-sm w-full text-center"
-                onClick={() => setMenuOpen(false)}
-              >
+              <NavLink to="/register" className="btn btn-primary btn-sm w-full" onClick={() => setMenuOpen(false)}>
                 Register
               </NavLink>
             </>
           ) : (
-            <>
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setMenuOpen(false);
-                }}
-                className="btn btn-error btn-sm w-full flex items-center justify-center gap-2"
-              >
-                <FaSignOutAlt /> Logout
-              </button>
-            </>
+            <button
+              onClick={() => {
+                handleLogout();
+                setMenuOpen(false);
+              }}
+              className="btn btn-error btn-sm w-full flex items-center justify-center gap-2"
+            >
+              <FaSignOutAlt /> Logout
+            </button>
           )}
         </div>
       )}

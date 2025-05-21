@@ -7,9 +7,8 @@ import Home from '../Pages/home/Home';
 import AllGroups from '../components/groups/AllGroups';
 import MyGroups from '../components/groups/MyGroups';
 import UpdateGroup from '../components/groups/UpdateGroup';
-// import PrivateRoute from '../components/PrivateRoute';
 import PrivateRoute from '../components/PrivateRoute';
-
+import CreateGroup from '../Pages/CreateGroup';
 
 export const Router = createBrowserRouter([
   {
@@ -19,8 +18,10 @@ export const Router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
-      { path: 'group', element: <AllGroups /> },
-      { path: 'myGroups', element: <PrivateRoute><MyGroups /></PrivateRoute> },
+      { path: 'groups', element: <AllGroups /> },
+
+      { path: 'create-group', element: <PrivateRoute><CreateGroup /></PrivateRoute> },
+      { path: 'my-groups', element: <PrivateRoute><MyGroups /></PrivateRoute> },
       { path: 'updateGroup/:id', element: <PrivateRoute><UpdateGroup /></PrivateRoute> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
