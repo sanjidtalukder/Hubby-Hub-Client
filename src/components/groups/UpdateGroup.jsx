@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../providers/AuthProvider';  // <-- এখানে পরিবর্তন
+import { AuthContext } from '../../providers/AuthProvider';
 
 const UpdateGroup = () => {
   const { id } = useParams();
@@ -13,8 +13,9 @@ const UpdateGroup = () => {
     description: '',
   });
 
+  const [image, setImage] = useState(null); // New state for image
+
   useEffect(() => {
-    // TODO: Replace with your API call to get group by id
     fetch(`/api/groups/${id}`)
       .then(res => res.json())
       .then(data => {
@@ -28,32 +29,57 @@ const UpdateGroup = () => {
   }, [id]);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setGroupData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate user ownership (optional but recommended)
     if (user?.email !== groupData.creatorEmail) {
       alert('You are not authorized to update this group.');
       return;
     }
 
     try {
-      // TODO: Replace with your API PUT/PATCH request to update group
-      await fetch(`/api/groups/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ description: groupData.description }),
-      });
-      alert('Group updated successfully!');
-      navigate('/myGroups');
+      let response;
+
+      if (image) {
+        // If there's an image, use FormData and /with-image route
+        const formData = new FormData();
+        formData.append('name', groupData.name);
+        formData.append('description', groupData.description);
+        formData.append('image', image);
+
+        response = await fetch(`/api/groups/${id}/with-image`, {
+          method: 'PUT',
+          body: formData,
+        });
+      } else {
+        // No image, send JSON to normal update route
+        response = await fetch(`/api/groups/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: groupData.name,
+            description: groupData.description,
+          }),
+        });
+      }
+
+      if (response.ok) {
+        alert('Group updated successfully!');
+        navigate('/myGroups');
+      } else {
+        alert('Update failed. Please try again.');
+      }
     } catch (error) {
       console.error(error);
       alert('Failed to update group');
@@ -63,25 +89,26 @@ const UpdateGroup = () => {
   return (
     <div className="max-w-lg mx-auto p-6 mt-8 border rounded shadow">
       <h2 className="text-2xl font-bold mb-4">Update Group</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4" encType="multipart/form-data">
         <label className="flex flex-col">
-          Name (readonly):
+          Name:
           <input
             type="text"
             name="name"
             value={groupData.name}
-            readOnly
+            onChange={handleChange}
             className="input input-bordered mt-1"
+            required
           />
         </label>
 
         <label className="flex flex-col">
-          Email (readonly):
+          Email:
           <input
             type="email"
             name="creatorEmail"
             value={groupData.creatorEmail}
-            readOnly
+           
             className="input input-bordered mt-1"
           />
         </label>
@@ -94,7 +121,17 @@ const UpdateGroup = () => {
             onChange={handleChange}
             className="textarea textarea-bordered mt-1"
             rows={4}
-            placeholder="Update group description"
+          />
+        </label>
+
+        <label className="flex flex-col">
+          Group Image:
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="file-input file-input-bordered mt-1"
           />
         </label>
 
