@@ -19,10 +19,9 @@ export const Router = createBrowserRouter([
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: 'groups', element: <AllGroups /> },
-
       { path: 'create-group', element: <PrivateRoute><CreateGroup /></PrivateRoute> },
       { path: 'my-groups', element: <PrivateRoute><MyGroups /></PrivateRoute> },
-      { path: 'updateGroup/:id', element: <PrivateRoute><UpdateGroup /></PrivateRoute> },
+      { path: 'update-group/:id', element: <PrivateRoute><UpdateGroup /></PrivateRoute> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

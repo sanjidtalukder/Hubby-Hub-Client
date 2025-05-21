@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import { AuthContext } from "../../providers/AuthProvider";
 
 const MyGroups = () => {
   const { user } = useContext(AuthContext);
   const userEmail = user?.email;
   const [groups, setGroups] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
     if (userEmail) {
@@ -13,6 +16,14 @@ const MyGroups = () => {
         .then((data) => setGroups(data));
     }
   }, [userEmail]);
+
+  // ✅ Toast success message for group creation
+  useEffect(() => {
+    if (location.state?.created) {
+      toast.success("Group created successfully!");
+      window.history.replaceState({}, document.title); // remove state so it doesn't show again on reload
+    }
+  }, [location.state]);
 
   const handleDelete = async (id) => {
     const confirmDelete = confirm("Are you sure you want to delete this group?");
@@ -24,13 +35,14 @@ const MyGroups = () => {
     const data = await res.json();
 
     if (data.deletedCount > 0) {
-      alert("Group deleted!");
+      toast.success("Group deleted!");
       setGroups(groups.filter((group) => group._id !== id));
     }
   };
 
   return (
     <div className="max-w-5xl mx-auto p-4 mt-8">
+      <Toaster position="top-center" /> {/* ✅ Add toast container */}
       <h2 className="text-2xl font-bold mb-4 text-center">My Groups</h2>
 
       {groups.length === 0 ? (
