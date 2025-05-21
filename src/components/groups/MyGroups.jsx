@@ -1,77 +1,59 @@
-import React, { useEffect, useState, useContext } from "react";
-import { AuthContext } from '../../providers/AuthProvider';
-import { useNavigate } from "react-router-dom";
-
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const MyGroups = () => {
   const { user } = useContext(AuthContext);
   const [myGroups, setMyGroups] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) return;
+    if (!user?.email) return;
 
-    // TODO: Replace with your API to fetch groups created by current user (maybe filter by user.email)
-    fetch(`/api/groups?creatorEmail=${user.email}`)
+    const email = user.email.toLowerCase(); // Lowercase for consistency
+    fetch(`http://localhost:5000/api/groups?creatorEmail=${email}`)
       .then(res => res.json())
-      .then(data => setMyGroups(data))
-      .catch(err => console.error(err));
+      .then(data => {
+        setMyGroups(data);
+      })
+      .catch(err => {
+        console.error("Failed to load groups:", err);
+      });
   }, [user]);
 
-  const handleDelete = async (id) => {
-    const confirmed = window.confirm('Are you sure you want to delete this group?');
-    if (!confirmed) return;
+  const handleDelete = (id) => {
+    const confirmDelete = confirm("Are you sure you want to delete this group?");
+    if (!confirmDelete) return;
 
-    try {
-      // TODO: Replace with your API delete call
-      await fetch(`/api/groups/${id}`, { method: 'DELETE' });
-      setMyGroups(prev => prev.filter(group => group.id !== id));
-      alert('Group deleted successfully');
-    } catch (error) {
-      console.error(error);
-      alert('Failed to delete group');
-    }
+    fetch(`http://localhost:5000/api/groups/${id}`, {
+      method: "DELETE"
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.deletedCount > 0) {
+          setMyGroups(prev => prev.filter(group => group._id !== id));
+        }
+      });
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <h2 className="text-3xl font-bold mb-6">My Groups</h2>
+    <div className="max-w-4xl mx-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">My Groups</h2>
       {myGroups.length === 0 ? (
-        <p>No groups created yet.</p>
+        <p>You have not created any groups yet.</p>
       ) : (
-        <table className="table-auto w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 px-4 py-2">Name</th>
-              <th className="border border-gray-300 px-4 py-2">Email</th>
-              <th className="border border-gray-300 px-4 py-2">Description</th>
-              <th className="border border-gray-300 px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {myGroups.map(group => (
-              <tr key={group.id} className="hover:bg-gray-50">
-                <td className="border border-gray-300 px-4 py-2">{group.name}</td>
-                <td className="border border-gray-300 px-4 py-2">{group.creatorEmail}</td>
-                <td className="border border-gray-300 px-4 py-2">{group.description}</td>
-                <td className="border border-gray-300 px-4 py-2 flex gap-2 justify-center">
-                  <button
-                    onClick={() => navigate(`/updateGroup/${group.id}`)}
-                    className="btn btn-sm btn-warning"
-                  >
-                    Update
-                  </button>
-                  <button
-                    onClick={() => handleDelete(group.id)}
-                    className="btn btn-sm btn-error"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ul className="space-y-4">
+          {myGroups.map(group => (
+            <li key={group._id} className="border p-4 rounded shadow">
+              <h3 className="text-xl font-semibold">{group.name}</h3>
+              <p>{group.description}</p>
+              <button
+                onClick={() => handleDelete(group._id)}
+                className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
