@@ -87,7 +87,7 @@ const UpdateGroup = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 mt-8 border rounded shadow">
+    <div className="max-w-lg mx-auto p-6 mt-8  rounded shadow">
       <h2 className="text-2xl font-bold mb-4">Update Group</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4" encType="multipart/form-data">
         <label className="flex flex-col">

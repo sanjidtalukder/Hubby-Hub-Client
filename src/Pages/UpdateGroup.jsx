@@ -56,7 +56,7 @@ const UpdateGroup = () => {
           toast.success("Group updated successfully!");
           setTimeout(() => navigate("/my-groups"), 1500);
         } else {
-          toast("No changes made.");
+          toast("No changes made.", { icon: "ℹ️" });
         }
       })
       .catch(() => toast.error("Failed to update group."));
@@ -76,9 +76,8 @@ const UpdateGroup = () => {
             type="text"
             name="name"
             value={group.name}
-            onChange={handleChange}
-            required
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            disabled
+            className="w-full border px-4 py-2 rounded bg-gray-100 cursor-not-allowed"
           />
         </div>
 
@@ -99,9 +98,8 @@ const UpdateGroup = () => {
             type="email"
             name="email"
             value={group.email}
-            onChange={handleChange}
-            required
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            disabled
+            className="w-full border px-4 py-2 rounded bg-gray-100 cursor-not-allowed"
           />
         </div>
 
