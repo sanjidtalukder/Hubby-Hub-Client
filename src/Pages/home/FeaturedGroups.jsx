@@ -1,78 +1,139 @@
 import { useEffect, useState } from 'react';
+import { FaUsers } from 'react-icons/fa';
+import { Fade } from 'react-awesome-reveal';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
 
 const FeaturedGroups = () => {
   const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Replace this with your real API in future
     const demoGroups = [
       {
         _id: 1,
         name: "Tech Innovators Meetup",
         description: "Join the brightest minds to explore AI, Robotics and future technology trends.",
-        image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=800&q=80"
+        image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=800&q=80",
+        startDate: "2025-06-01"
       },
       {
         _id: 2,
         name: "Art & Creativity Workshop",
         description: "Unleash your inner artist through group painting, sketching and exhibitions.",
-        image: "https://images.unsplash.com/photo-1496317899792-9d7dbcd928a1?auto=format&fit=crop&w=800&q=80"
+        image: "https://images.unsplash.com/photo-1496317899792-9d7dbcd928a1?auto=format&fit=crop&w=800&q=80",
+        startDate: "2025-06-10"
       },
       {
         _id: 3,
         name: "Adventure & Hiking Club",
         description: "Explore nature with fellow hikers. Upcoming trip: Bandarban hills!",
-        image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80"
+        image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+        startDate: "2025-06-15"
       },
       {
         _id: 4,
         name: "Book Lovers Gathering",
         description: "Discuss bestsellers and classics over coffee every weekend.",
-        image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80"
+        image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80",
+        startDate: "2025-05-25"
       },
       {
         _id: 5,
         name: "Photography Field Trip",
         description: "Capture the beauty of Dhaka city with your lens. Beginners welcome!",
-        image: "https://i.ibb.co/Fqj8cQbg/images-1.jpg"
+        image: "https://i.ibb.co/Fqj8cQbg/images-1.jpg",
+        startDate: "2025-06-20"
       },
       {
         _id: 6,
         name: "Cooking & Cuisine Night",
         description: "Try new dishes, share your recipe and enjoy a flavorful evening.",
-        image: "https://i.ibb.co/2Ym6yhHW/images-2.jpg"
+        image: "https://i.ibb.co/2Ym6yhHW/images-2.jpg",
+        startDate: "2025-06-05"
       },
     ];
 
-    // Simulate fetch
     setTimeout(() => {
       setGroups(demoGroups);
+      setLoading(false);
     }, 500);
   }, []);
 
+  const isGroupActive = (startDate) => {
+    if (!startDate) return false;
+    const today = new Date();
+    const groupStartDate = new Date(startDate);
+    return groupStartDate >= today;
+  };
+
+  const handleJoinClick = (groupName) => {
+    toast.success(`Your request to join "${groupName}" is approvable!`, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+  };
+
   return (
-    <section className="px-4 py-8">
-      <h2 className="text-3xl font-bold text-center mb-10">🌟 Featured Upcoming Groups</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-        {groups.map(group => (
-          <div key={group._id} className="card bg-base-100 shadow-md w-96">
-            <figure className="px-10 pt-10">
-              <img
-                src={group.image}
-                alt={group.name}
-                className="rounded-xl h-52 object-cover w-full"
-              />
-            </figure>
-            <div className="card-body items-center text-center">
-              <h2 className="card-title text-xl">{group.name}</h2>
-              <p className="text-gray-600">{group.description}</p>
-              <div className="card-actions mt-4">
-                <button className="btn btn-primary">Join Now</button>
+    <section className="px-4 py-10 bg-gray-50 min-h-screen">
+      <h2 className="text-4xl font-bold text-center mb-12 text-primary">🌟 Featured Upcoming Groups</h2>
+
+      {loading ? (
+        <div className="flex justify-center items-center min-h-[200px]">
+          <span className="loading loading-spinner text-primary text-2xl"></span>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {groups.map(group => (
+            <Fade key={group._id} triggerOnce>
+              <div className="border border-gray-200 rounded-lg p-5 shadow-md hover:shadow-lg transition bg-white">
+                <img
+                  src={group.image}
+                  alt={group.name}
+                  className="w-full h-48 object-cover rounded mb-3"
+                />
+                <h3 className="text-xl font-semibold mb-1">{group.name}</h3>
+                <p className="text-sm text-gray-600 mb-1">Category: Hobby</p>
+                <p className="text-gray-700 mb-2">
+                  {group.description?.slice(0, 80) || 'No description available.'}
+                  {group.description?.length > 80 && '...'}
+                </p>
+
+                <p className="text-sm text-gray-500 mb-4">
+                  <strong>Start Date:</strong> {formatDate(group.startDate)}
+                </p>
+
+                {isGroupActive(group.startDate) ? (
+                  <button
+                    onClick={() => handleJoinClick(group.name)}
+                    className="btn btn-primary w-full flex items-center justify-center gap-2"
+                  >
+                    <FaUsers /> Join This Group
+                  </button>
+                ) : (
+                  <p className="text-red-500 text-center font-semibold">
+                    This group is no longer active
+                  </p>
+                )}
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            </Fade>
+          ))}
+        </div>
+      )}
+
+      <ToastContainer />
     </section>
   );
 };
