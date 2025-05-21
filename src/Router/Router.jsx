@@ -10,6 +10,7 @@ import UpdateGroup from '../components/groups/UpdateGroup';
 import PrivateRoute from '../components/PrivateRoute';
 import CreateGroup from '../Pages/CreateGroup';
 import NotFound from '../Pages/NotFound';
+import GroupDetails from '../Pages/GroupDetails';
  
 
 export const Router = createBrowserRouter([
@@ -24,6 +25,7 @@ export const Router = createBrowserRouter([
       { path: 'create-group', element: <PrivateRoute><CreateGroup /></PrivateRoute> },
       { path: 'my-groups', element: <PrivateRoute><MyGroups /></PrivateRoute> },
       { path: 'update-group/:id', element: <PrivateRoute><UpdateGroup /></PrivateRoute> },
+      { path: 'group-details/:id', element: <PrivateRoute><GroupDetails /></PrivateRoute> },
       { path: '*', element: <NotFound /> },  
     ],
   },

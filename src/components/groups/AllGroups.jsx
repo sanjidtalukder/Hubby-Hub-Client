@@ -62,11 +62,12 @@ const AllGroups = () => {
 
               {isGroupActive(group.startDate) ? (
                 <button
-                  onClick={() => navigate(`/group-details/${group._id}`)}
-                  className="btn btn-primary w-full"
-                >
-                  Join Group
-                </button>
+  onClick={() => navigate(`/group-details/${group._id}`)}
+  className="btn btn-primary w-full"
+>
+  Join Group
+</button>
+
               ) : (
                 <p className="text-red-500 text-center font-semibold">This group is no longer active</p>
               )}
