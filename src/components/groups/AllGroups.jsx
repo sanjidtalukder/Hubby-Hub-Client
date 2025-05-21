@@ -6,7 +6,7 @@ const AllGroups = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/groups') // ✅ API URL ঠিক রাখো
+    fetch('http://localhost:5000/api/groups')
       .then(res => res.json())
       .then(data => {
         setGroups(data);
@@ -15,6 +15,20 @@ const AllGroups = () => {
         console.error('Failed to fetch groups:', err);
       });
   }, []);
+
+  const isGroupActive = (startDate) => {
+    if (!startDate) return false;
+    const today = new Date();
+    const groupStartDate = new Date(startDate);
+    return groupStartDate >= today;
+  };
+
+  // ফরম্যাটিং ফাংশন - Date কে সুন্দর readable string এ রূপান্তর করবে
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -35,17 +49,27 @@ const AllGroups = () => {
                 className="w-full h-48 object-cover rounded mb-3"
               />
               <h3 className="text-xl font-semibold mb-1">{group.name}</h3>
-              <p className="text-sm text-gray-600 mb-3">{group.category}</p>
-              <p className="text-gray-700 mb-4">
+              <p className="text-sm text-gray-600 mb-1">{group.category}</p>
+              <p className="text-gray-700 mb-2">
                 {group.description?.slice(0, 80) || 'No description available.'}
                 {group.description?.length > 80 && '...'}
               </p>
-              <button
-                onClick={() => navigate(`/group-details/${group._id}`)}
-                className="btn btn-primary w-full"
-              >
-                See More
-              </button>
+
+              {/* এখানে Start Date দেখানো হলো */}
+              <p className="text-sm text-gray-500 mb-4">
+                <strong>Start Date:</strong> {formatDate(group.startDate)}
+              </p>
+
+              {isGroupActive(group.startDate) ? (
+                <button
+                  onClick={() => navigate(`/group-details/${group._id}`)}
+                  className="btn btn-primary w-full"
+                >
+                  Join Group
+                </button>
+              ) : (
+                <p className="text-red-500 text-center font-semibold">This group is no longer active</p>
+              )}
             </div>
           ))}
         </div>

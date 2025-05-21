@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
 
-
 const CreateGroup = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -13,6 +12,7 @@ const CreateGroup = () => {
     category: "",
     description: "",
     creatorEmail: "",
+    startDate: "",  // <-- নতুন ফিল্ড যুক্ত করলাম
   });
 
   useEffect(() => {
@@ -34,7 +34,13 @@ const CreateGroup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!group.name || !group.image || !group.category || !group.creatorEmail) {
+    if (
+      !group.name ||
+      !group.image ||
+      !group.category ||
+      !group.creatorEmail ||
+      !group.startDate // এখন startDate ও চেক করবো
+    ) {
       return alert("Please fill all required fields!");
     }
 
@@ -99,7 +105,18 @@ const CreateGroup = () => {
           className="w-full border p-2 rounded"
         ></textarea>
 
-      
+        {/* নতুন তারিখ ইনপুট */}
+        <label className="block text-gray-700 font-semibold">
+          Start Date <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="date"
+          name="startDate"
+          value={group.startDate}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+        />
 
         <button
           type="submit"
