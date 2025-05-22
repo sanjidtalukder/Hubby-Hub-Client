@@ -1,46 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Fade } from 'react-awesome-reveal';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { FaUsers } from 'react-icons/fa';
-import { toast } from 'react-toastify'; // ✅ toast import
+import { toast } from 'react-toastify';
+import { AuthContext } from '../providers/AuthProvider';
+
+// 🛠 formatDate ফাংশনটি কম্পোনেন্টের বাইরে বা উপরে রাখতে হবে যাতে JSX থেকে অ্যাক্সেস করা যায়
+const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
+  return new Date(dateString).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
 
 const GroupDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const handleJoinClick = (groupId, groupName) => {
-    toast.success(`Your request to join "${groupName}" is approvable!`, {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
-    // Optional Navigation (if needed after toast)
-    setTimeout(() => {
-      navigate(`/group-details/${groupId}`);
-    }, 1500);
-  };
+  const [requested, setRequested] = useState(false);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
+    setLoading(true);
     fetch(`http://localhost:5000/api/groups/${id}`)
       .then(res => res.json())
       .then(data => {
         setGroup(data);
+
+        const joined = data?.joinedUsers?.some(member => member.email === user?.email);
+        const requestedAlready = data?.joinRequests?.some(member => member.email === user?.email);
+
+        setRequested(joined || requestedAlready);
         setLoading(false);
       })
       .catch(err => {
         console.error('Failed to fetch group:', err);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, user?.email]);
+
+  const handleJoinClick = async () => {
+    if (!user) {
+      toast.error("Please login first to join.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/groups/${id}/join-request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success('Your join request has been sent!');
+        setRequested(true);
+      } else {
+        toast.error(data.error || 'Failed to send join request.');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('An error occurred while sending request.');
+    }
+  };
 
   if (loading) {
     return (
@@ -73,34 +105,76 @@ const GroupDetails = () => {
           className="w-full h-64 object-cover rounded-lg mb-4"
         />
 
-        <div className="space-y-2 text-gray-700">
-          <p>
-            <span className="font-semibold">Category:</span> {group.category || 'Not specified'}
-          </p>
-          <p>
-            <span className="font-semibold">📅 Start Date:</span>{' '}
-            {group.startDate
-              ? new Date(group.startDate).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })
-              : 'Not provided'}
-          </p>
-          <div>
-            <p className="font-semibold mb-1">Description:</p>
-            <p className="text-gray-600">{group.description || 'No description available.'}</p>
-          </div>
 
+        {/* Avatar Group with DaisyUI */}
+        <div className="avatar-group -space-x-6 mb-6">
+          {requested && user && (
+            <div className="avatar">
+              <div className="w-12">
+                <img
+                  src={user.photoURL || 'https://i.ibb.co/2kR5zq0/default-avatar.png'}
+                  alt={user.displayName}
+                  title={user.displayName}
+                />
+              </div>
+            </div>
+          )}
+
+          {group.joinedUsers
+            ?.filter(member => member.email !== user?.email)
+            .slice(0, 5)
+            .map((member, index) => (
+              <div key={index} className="avatar">
+                <div className="w-12">
+                  <img
+                    src={member.photo || 'https://i.ibb.co/2kR5zq0/default-avatar.png'}
+                    alt={member.name}
+                    title={member.name}
+                  />
+                </div>
+              </div>
+            ))}
+
+          {group.joinedUsers?.length > 5 && (
+            <div className="avatar placeholder">
+              <div className="bg-neutral text-neutral-content w-12">
+                <span>+{group.joinedUsers.length - 5}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <p className="text-sm text-gray-600 mb-1">{group.category || 'No category'}</p>
+        <p className="text-sm text-gray-500 mb-1">
+          <strong>Start Date:</strong> {formatDate(group.startDate)}
+        </p>
+
+        <p className="mb-4 text-gray-700">{group.description}</p>
+
+        {/* <div className="mb-4 flex items-center gap-2 shadow-2xl">
+          <FaUsers className="text-blue-600" />
+          <span>{group.joinedUsers?.length || 3} Members</span>
+        </div> */}
+
+        
+
+        {/* Join Button */}
+        {!requested ? (
           <button
-            onClick={() => handleJoinClick(group._id, group.name)} // ✅ Correct parameters
-            className="btn btn-primary w-full flex items-center justify-center gap-2"
+            onClick={handleJoinClick}
+            className="btn btn-primary w-full flex items-center justify-center gap-2 mt-4"
           >
             <FaUsers /> Join This Group
           </button>
-        </div>
+        ) : (
+          <button
+            className="btn w-full mt-4 bg-blue-900 text-blue-700 cursor-not-allowed"
+            disabled
+          >
+            Requested
+          </button>
+        )}
       </div>
-      <br />
     </Fade>
   );
 };
