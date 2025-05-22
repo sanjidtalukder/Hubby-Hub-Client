@@ -8,18 +8,18 @@ const CreateGroup = () => {
 
   const [group, setGroup] = useState({
     name: "",
-    image: "",
+    imageUrl: "",   // এখানে key নামটা "imageUrl" করতে হবে, কারণ সার্ভারে তুমি "imageUrl" সেভ করছো
     category: "",
     description: "",
     creatorEmail: "",
-    startDate: "",  // <-- নতুন ফিল্ড যুক্ত করলাম
+    startDate: "",
   });
 
   useEffect(() => {
     if (user?.email) {
       setGroup((prev) => ({
         ...prev,
-        creatorEmail: user.email,
+        creatorEmail: user.email.toLowerCase(), // এখানে email ছোট হাতের করে নিতে পারো
       }));
     }
   }, [user]);
@@ -36,29 +36,33 @@ const CreateGroup = () => {
 
     if (
       !group.name ||
-      !group.image ||
+      !group.imageUrl ||
       !group.category ||
       !group.creatorEmail ||
-      !group.startDate // এখন startDate ও চেক করবো
+      !group.startDate
     ) {
       return alert("Please fill all required fields!");
     }
 
-    const res = await fetch("http://localhost:5000/api/groups", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(group),
-    });
+    try {
+      const res = await fetch("http://localhost:5000/api/groups", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(group),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (data.insertedId || data.acknowledged) {
-      alert("Group created successfully!");
-      navigate("/my-groups");
-    } else {
-      alert("Something went wrong!");
+      if (data.insertedId || data.acknowledged) {
+        alert("Group created successfully!");
+        navigate("/my-groups");
+      } else {
+        alert("Something went wrong!");
+      }
+    } catch (error) {
+      alert("Failed to create group: " + error.message);
     }
   };
 
@@ -79,9 +83,9 @@ const CreateGroup = () => {
 
         <input
           type="text"
-          name="image"
+          name="imageUrl"  // এখানে name "imageUrl"
           placeholder="Group Image URL"
-          value={group.image}
+          value={group.imageUrl}
           onChange={handleChange}
           className="w-full border p-2 rounded"
           required
@@ -105,7 +109,6 @@ const CreateGroup = () => {
           className="w-full border p-2 rounded"
         ></textarea>
 
-        {/* নতুন তারিখ ইনপুট */}
         <label className="block text-gray-700 font-semibold">
           Start Date <span className="text-red-500">*</span>
         </label>

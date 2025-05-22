@@ -12,11 +12,10 @@ const MyGroups = () => {
     if (!user?.email) return;
 
     const email = user.email.toLowerCase();
+
     fetch(`http://localhost:5000/api/groups?creatorEmail=${email}`)
       .then(res => res.json())
-      .then(data => {
-        setMyGroups(data);
-      })
+      .then(data => setMyGroups(data))
       .catch(err => {
         console.error("Failed to load groups:", err);
         toast.error("Failed to load groups.");
@@ -47,7 +46,7 @@ const MyGroups = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <Toaster position="top-center" reverseOrder={false} />
-      
+
       <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-3 rounded-lg shadow-lg">
         🎯 My Hobby Groups
       </h2>
@@ -69,7 +68,7 @@ const MyGroups = () => {
               className="border border-gray-200 rounded-xl shadow-lg p-5 bg-white hover:shadow-xl transition duration-300"
             >
               <h3 className="text-2xl font-bold text-indigo-600 mb-2">{group.name}</h3>
-              <p className="text-gray-700">{group.description}</p>
+              <p className="text-gray-700">{group.description || "No description available."}</p>
 
               <div className="flex justify-end mt-4 gap-2">
                 <Link to={`/update-group/${group._id}`}>
