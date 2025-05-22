@@ -77,7 +77,7 @@ const AllGroups = () => {
                   onClick={() => navigate(`/group-details/${group._id}`)}
                   className="btn btn-primary w-full"
                 >
-                  Join Group
+                  See more
                 </button>
               ) : (
                 <p className="text-red-500 text-center font-semibold">This group is no longer active</p>

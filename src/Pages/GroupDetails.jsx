@@ -2,12 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Fade } from 'react-awesome-reveal';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import { FaUsers } from 'react-icons/fa';
+import { toast } from 'react-toastify'; // ✅ toast import
 
 const GroupDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const handleJoinClick = (groupId, groupName) => {
+    toast.success(`Your request to join "${groupName}" is approvable!`, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+    // Optional Navigation (if needed after toast)
+    setTimeout(() => {
+      navigate(`/group-details/${groupId}`);
+    }, 1500);
+  };
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/groups/${id}`)
@@ -48,14 +68,14 @@ const GroupDetails = () => {
         <h2 className="text-3xl font-bold text-blue-800 mb-4">{group.name}</h2>
 
         <img
-          src={group.image || 'https://i.ibb.co/2kR5zq0/default-avatar.png'}
+          src={group.imageUrl || 'https://i.ibb.co/2kR5zq0/default-avatar.png'}
           alt={group.name}
-          className="w-full h-64 object-cover rounded-lg  mb-4"
+          className="w-full h-64 object-cover rounded-lg mb-4"
         />
 
         <div className="space-y-2 text-gray-700">
           <p>
-            <span className="font-semibold"> Category:</span> {group.category || 'Not specified'}
+            <span className="font-semibold">Category:</span> {group.category || 'Not specified'}
           </p>
           <p>
             <span className="font-semibold">📅 Start Date:</span>{' '}
@@ -68,11 +88,19 @@ const GroupDetails = () => {
               : 'Not provided'}
           </p>
           <div>
-            <p className="font-semibold mb-1"> Description:</p>
+            <p className="font-semibold mb-1">Description:</p>
             <p className="text-gray-600">{group.description || 'No description available.'}</p>
           </div>
+
+          <button
+            onClick={() => handleJoinClick(group._id, group.name)} // ✅ Correct parameters
+            className="btn btn-primary w-full flex items-center justify-center gap-2"
+          >
+            <FaUsers /> Join This Group
+          </button>
         </div>
-      </div><br></br>
+      </div>
+      <br />
     </Fade>
   );
 };
