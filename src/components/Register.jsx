@@ -63,7 +63,7 @@ const Register = () => {
             <div className="form-control mb-3">
               <label className="label">
                 <span className="label-text">Name</span>
-              </label>
+              </label><br></br>
               <input
                 type="text"
                 name="name"
@@ -76,7 +76,7 @@ const Register = () => {
             <div className="form-control mb-3">
               <label className="label">
                 <span className="label-text">Email</span>
-              </label>
+              </label><br></br>
               <input
                 type="email"
                 name="email"
@@ -89,7 +89,7 @@ const Register = () => {
             <div className="form-control mb-3">
               <label className="label">
                 <span className="label-text">Photo URL</span>
-              </label>
+              </label><br></br>
               <input
                 type="text"
                 name="photo"
@@ -101,7 +101,7 @@ const Register = () => {
             <div className="form-control mb-4">
               <label className="label">
                 <span className="label-text">Password</span>
-              </label>
+              </label><br></br>
               <input
                 type="password"
                 name="password"

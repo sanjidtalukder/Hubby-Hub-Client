@@ -164,13 +164,18 @@ const AboutUs = () => {
         <div className="max-w-4xl mx-auto">
           <h3 className="text-3xl font-bold mb-8 text-center">Watch Our Story</h3>
           <div className="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-lg">
-            <iframe
+            {/* <iframe
               src="https://www.youtube.com/embed/dQw4w9WgXcQ"
               title="HobbyHub Intro Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               className="w-full h-full"
-            ></iframe>
+            ></iframe><br></br> */}
+           <iframe 
+            src="https://www.youtube.com/embed/01l0s1iR_ZI?si=Qil17-6YEwMp5srq"
+            className="w-full h-full"
+             title="YouTube video player"
+              frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
         </div>
 

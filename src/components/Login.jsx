@@ -45,60 +45,62 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
-      <div className="card w-full max-w-md bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="text-2xl font-bold text-center mb-4">Login to your account</h2>
+      <div className="card w-full max-w-md shadow-2xl bg-base-100 p-8">
+        <h2 className="text-3xl font-bold text-center mb-6">Login to HobbyHub</h2>
 
-          <form onSubmit={handleLogin}>
-            <div className="form-control mb-3">
-              <label className="label">
-                <span className="label-text">Email</span>
-              </label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                className="input input-bordered"
-                required
-              />
-            </div>
+        {error && (
+          <div className="text-red-600 text-sm text-center mb-4">{error}</div>
+        )}
 
-            <div className="form-control mb-4">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                className="input input-bordered"
-                required
-              />
-            </div>
+        <form onSubmit={handleLogin}>
+          <div className="form-control mb-6">
+            <label className="label">
+              <span className="label-text font-semibold">Email</span>
+            </label><br></br>
+            <input
+              type="email"
+              name="email"
+              required
+              className="input input-bordered"
+              placeholder="you@example.com"
+            />
+          </div>
 
-            {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+          <div className="form-control mb-6">
+            <label className="label">
+              <span className="label-text font-semibold">Password</span>
+            </label>
+            <input
+              type="password"
+              name="password"
+              required
+              className="input input-bordered"
+              placeholder="••••••••"
+            />
+          </div>
 
-            <div className="form-control">
-              <button type="submit" className="btn btn-primary w-full">Login</button>
-            </div>
-          </form>
-
-          <div className="divider">OR</div>
-
-          <button
-            onClick={handleGoogle}
-            className="btn btn-outline w-full mb-2 flex items-center justify-center gap-2"
-          >
-            <FcGoogle className="text-xl" /> Continue with Google
+          <button type="submit" className="btn btn-primary w-full mb-4">
+            Login
           </button>
+        </form>
 
-          <p className="text-sm text-center">
-            Don't have an account?
-            <Link to="/register" className="text-blue-600 font-semibold ml-1 hover:underline">
-              Register here
-            </Link>
-          </p>
+        <div className="text-center mb-4">
+          <p>or</p>
         </div>
+
+        <button
+          onClick={handleGoogle}
+          className="btn btn-outline w-full flex items-center justify-center gap-2"
+        >
+          <FcGoogle className="text-xl" /> Continue with Google
+        </button>
+
+        <p className="mt-6 text-sm text-center">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-blue-500 hover:underline">
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );

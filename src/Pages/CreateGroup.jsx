@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
+import toast from "react-hot-toast";
 
 const CreateGroup = () => {
   const navigate = useNavigate();
@@ -35,11 +36,26 @@ const CreateGroup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const {
+      name,
+      imageUrl,
+      category,
+      creatorEmail,
+      startDate,
+      meetingLocation,
+      maxMembers,
+    } = group;
 
-    const { name, imageUrl, category, creatorEmail, startDate, meetingLocation, maxMembers } = group;
-
-    if (!name || !imageUrl || !category || !creatorEmail || !startDate || !meetingLocation || !maxMembers) {
-      return alert("Please fill all required fields!");
+    if (
+      !name ||
+      !imageUrl ||
+      !category ||
+      !creatorEmail ||
+      !startDate ||
+      !meetingLocation ||
+      !maxMembers
+    ) {
+      return toast.error("Please fill all required fields!");
     }
 
     try {
@@ -53,100 +69,85 @@ const CreateGroup = () => {
 
       const data = await res.json();
 
-      if (data.insertedId || data.acknowledged) {
-        alert("Group created successfully!");
-        navigate("/my-groups");
+      if (data.insertedId) {
+        toast.success("Group created successfully!");
+        navigate("/groups");
       } else {
-        alert("Something went wrong!");
+        toast.error("Failed to create group.");
       }
     } catch (error) {
-      alert("Failed to create group: " + error.message);
+      console.error("Error creating group:", error);
+      toast.error("Something went wrong.");
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4 bg-white shadow rounded-xl mt-8">
-      <h2 className="text-2xl font-bold mb-4 text-center">Create a New Group</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        
-        <input
-          type="text"
-          name="name"
-          placeholder="Group Name"
-          value={group.name}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-        />
-
-        <input
-          type="text"
-          name="imageUrl"
-          placeholder="Group Image URL"
-          value={group.imageUrl}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-        />
-
-        <input
-          type="text"
-          name="category"
-          placeholder="Category (e.g. Art, Sports, Tech)"
-          value={group.category}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-        />
-
-        <textarea
-          name="description"
-          placeholder="Group Description"
-          value={group.description}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        ></textarea>
-
-        <label className="block text-gray-700 font-semibold">
-          Start Date <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="date"
-          name="startDate"
-          value={group.startDate}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-        />
-
-        <input
-          type="text"
-          name="meetingLocation"
-          placeholder="Meeting Location"
-          value={group.meetingLocation}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-        />
-
-        <input
-          type="number"
-          name="maxMembers"
-          placeholder="Max Members"
-          value={group.maxMembers}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-          min="1"
-        />
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
-        >
-          Create Group
-        </button>
-      </form>
+    <div className="min-h-screen bg-base-200 py-10 px-4">
+      <div className="max-w-2xl mx-auto bg-white shadow-xl rounded-xl p-8">
+        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Create New Group</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            name="name"
+            value={group.name}
+            onChange={handleChange}
+            placeholder="Group Name"
+            className="input input-bordered w-full"
+          />
+          <input
+            type="text"
+            name="imageUrl"
+            value={group.imageUrl}
+            onChange={handleChange}
+            placeholder="Group Image URL"
+            className="input input-bordered w-full"
+          />
+          <input
+            type="text"
+            name="category"
+            value={group.category}
+            onChange={handleChange}
+            placeholder="Category (e.g. Music, Reading)"
+            className="input input-bordered w-full"
+          />
+          <textarea
+            name="description"
+            value={group.description}
+            onChange={handleChange}
+            placeholder="Group Description"
+            className="textarea textarea-bordered w-full"
+          ></textarea>
+          <input
+            type="date"
+            name="startDate"
+            value={group.startDate}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+          />
+          <input
+            type="text"
+            name="meetingLocation"
+            value={group.meetingLocation}
+            onChange={handleChange}
+            placeholder="Meeting Location"
+            className="input input-bordered w-full"
+          />
+          <input
+            type="number"
+            name="maxMembers"
+            value={group.maxMembers}
+            onChange={handleChange}
+            placeholder="Maximum Members"
+            className="input input-bordered w-full"
+          />
+          <button
+            type="submit"
+            className="btn btn-primary w-full uppercase font-semibold"
+          >
+            Create Group
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
