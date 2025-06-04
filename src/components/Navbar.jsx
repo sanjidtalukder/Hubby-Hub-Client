@@ -45,7 +45,16 @@ const Navbar = () => {
             My Groups
           </NavLink>
         </>
+
+         
       )}
+
+      <NavLink to="/aboutus" className={linkClass} onClick={() => setMenuOpen(false)}>
+            About Us
+          </NavLink>
+           <NavLink to="/faq" className={linkClass} onClick={() => setMenuOpen(false)}>
+            FAQ
+          </NavLink>
     </>
   );
 
