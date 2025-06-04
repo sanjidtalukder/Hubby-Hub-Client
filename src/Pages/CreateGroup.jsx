@@ -8,18 +8,20 @@ const CreateGroup = () => {
 
   const [group, setGroup] = useState({
     name: "",
-    imageUrl: "",   // এখানে key নামটা "imageUrl" করতে হবে, কারণ সার্ভারে তুমি "imageUrl" সেভ করছো
+    imageUrl: "",
     category: "",
     description: "",
     creatorEmail: "",
     startDate: "",
+    meetingLocation: "",
+    maxMembers: "",
   });
 
   useEffect(() => {
     if (user?.email) {
       setGroup((prev) => ({
         ...prev,
-        creatorEmail: user.email.toLowerCase(), // এখানে email ছোট হাতের করে নিতে পারো
+        creatorEmail: user.email.toLowerCase(),
       }));
     }
   }, [user]);
@@ -34,13 +36,9 @@ const CreateGroup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !group.name ||
-      !group.imageUrl ||
-      !group.category ||
-      !group.creatorEmail ||
-      !group.startDate
-    ) {
+    const { name, imageUrl, category, creatorEmail, startDate, meetingLocation, maxMembers } = group;
+
+    if (!name || !imageUrl || !category || !creatorEmail || !startDate || !meetingLocation || !maxMembers) {
       return alert("Please fill all required fields!");
     }
 
@@ -70,7 +68,7 @@ const CreateGroup = () => {
     <div className="max-w-xl mx-auto p-4 bg-white shadow rounded-xl mt-8">
       <h2 className="text-2xl font-bold mb-4 text-center">Create a New Group</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-
+        
         <input
           type="text"
           name="name"
@@ -83,7 +81,7 @@ const CreateGroup = () => {
 
         <input
           type="text"
-          name="imageUrl"  // এখানে name "imageUrl"
+          name="imageUrl"
           placeholder="Group Image URL"
           value={group.imageUrl}
           onChange={handleChange}
@@ -119,6 +117,27 @@ const CreateGroup = () => {
           onChange={handleChange}
           className="w-full border p-2 rounded"
           required
+        />
+
+        <input
+          type="text"
+          name="meetingLocation"
+          placeholder="Meeting Location"
+          value={group.meetingLocation}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+        />
+
+        <input
+          type="number"
+          name="maxMembers"
+          placeholder="Max Members"
+          value={group.maxMembers}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+          min="1"
         />
 
         <button
