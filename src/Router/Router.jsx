@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../Pages/MainLayout';
 import Login from '../components/Login';
 import Register from '../components/Register';
@@ -11,9 +11,9 @@ import PrivateRoute from '../components/PrivateRoute';
 import CreateGroup from '../Pages/CreateGroup';
 import NotFound from '../Pages/NotFound';
 import GroupDetails from '../Pages/GroupDetails';
+import FutureGroupDetails from '../Pages/FutureGroupDetails';
 import AboutUs from '../components/AboutUs';
 import FAQ from '../components/FAQ';
- 
 
 export const Router = createBrowserRouter([
   {
@@ -27,10 +27,11 @@ export const Router = createBrowserRouter([
       { path: 'create-group', element: <PrivateRoute><CreateGroup /></PrivateRoute> },
       { path: 'my-groups', element: <PrivateRoute><MyGroups /></PrivateRoute> },
       { path: 'update-group/:id', element: <PrivateRoute><UpdateGroup /></PrivateRoute> },
-      { path: 'group-details/:id', element: <PrivateRoute><GroupDetails /></PrivateRoute> }, 
+      { path: 'group-details/:id', element: <PrivateRoute><GroupDetails /></PrivateRoute> },
+      { path: 'future-group-details/:id', element: <PrivateRoute><FutureGroupDetails /></PrivateRoute> },
       { path: 'aboutus', element: <PrivateRoute><AboutUs /></PrivateRoute> },
       { path: 'faq', element: <PrivateRoute><FAQ /></PrivateRoute> },
-       { path: '*', element: <NotFound /> }, 
+      { path: '*', element: <NotFound /> },
     ],
   },
 ]);

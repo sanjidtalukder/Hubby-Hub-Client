@@ -3,6 +3,7 @@ import { FaUsers } from 'react-icons/fa';
 import { Fade } from 'react-awesome-reveal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const formatDate = (dateString) => {
   if (!dateString) return "N/A";
@@ -10,9 +11,17 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
+const LOCAL_STORAGE_KEY = "requestedGroups";
+
 const FeaturedGroups = () => {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [requestedGroups, setRequestedGroups] = useState(() => {
+    // LocalStorage থেকে আগের রিকোয়েস্টগুলো লোড করো
+    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const demoGroups = [
@@ -21,42 +30,42 @@ const FeaturedGroups = () => {
         name: "Tech Innovators Meetup",
         description: "Join the brightest minds to explore AI, Robotics and future technology trends.",
         image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=800&q=80",
-        startDate: "2025-06-01"
+        startDate: "2025-10-01"
       },
       {
         _id: 2,
         name: "Art & Creativity Workshop",
         description: "Unleash your inner artist through group painting, sketching and exhibitions.",
         image: "https://images.unsplash.com/photo-1496317899792-9d7dbcd928a1?auto=format&fit=crop&w=800&q=80",
-        startDate: "2025-06-10"
+        startDate: "2025-11-10"
       },
       {
         _id: 3,
         name: "Adventure & Hiking Club",
         description: "Explore nature with fellow hikers. Upcoming trip: Bandarban hills!",
         image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
-        startDate: "2025-06-15"
+        startDate: "2025-09-15"
       },
       {
         _id: 4,
         name: "Book Lovers Gathering",
         description: "Discuss bestsellers and classics over coffee every weekend.",
         image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80",
-        startDate: "2025-05-25"
+        startDate: "2025-12-25"
       },
       {
         _id: 5,
         name: "Photography Field Trip",
         description: "Capture the beauty of Dhaka city with your lens. Beginners welcome!",
         image: "https://i.ibb.co/Fqj8cQbg/images-1.jpg",
-        startDate: "2025-06-20"
+        startDate: "2025-8-20"
       },
       {
         _id: 6,
         name: "Cooking & Cuisine Night",
         description: "Try new dishes, share your recipe and enjoy a flavorful evening.",
         image: "https://i.ibb.co/2Ym6yhHW/images-2.jpg",
-        startDate: "2025-06-05"
+        startDate: "2025-10-05"
       },
     ];
 
@@ -73,17 +82,22 @@ const FeaturedGroups = () => {
     return groupStartDate >= today;
   };
 
-  const handleJoinClick = (groupName) => {
-    toast.success(`Your request to join "${groupName}" is approvable!`, {
+  const handleJoinClick = (group) => {
+    if (requestedGroups.includes(group._id)) return; 
+
+    toast.success(`Your request to join "${group.name}" is approvable!`, {
       position: "top-center",
       autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
       theme: "colored",
     });
+
+    const updatedRequested = [...requestedGroups, group._id];
+    setRequestedGroups(updatedRequested);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedRequested));
+
+    setTimeout(() => {
+      navigate(`/future-group-details/${group._id}`, { state: group });
+    }, 1000);
   };
 
   return (
@@ -116,12 +130,21 @@ const FeaturedGroups = () => {
                 </p>
 
                 {isGroupActive(group.startDate) ? (
-                  <button
-                    onClick={() => handleJoinClick(group.name)}
-                    className="btn btn-primary w-full flex items-center justify-center gap-2"
-                  >
-                    <FaUsers /> Join This Group
-                  </button>
+                  requestedGroups.includes(group._id) ? (
+                    <button
+                      disabled
+                      className="btn btn-secondary w-full cursor-not-allowed"
+                    >
+                      Requested
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleJoinClick(group)}
+                      className="btn btn-primary w-full flex items-center justify-center gap-2"
+                    >
+                      <FaUsers /> Join This Group
+                    </button>
+                  )
                 ) : (
                   <p className="text-red-500 text-center font-semibold">
                     This group is no longer active
