@@ -1,3 +1,5 @@
+// src/firebase/firebase.init.js
+
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "./firebase.config";
 

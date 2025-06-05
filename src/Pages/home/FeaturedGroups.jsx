@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+// src/pages/FeaturedGroups.jsx
+
+import { useEffect, useState, useContext } from 'react';
 import { FaUsers } from 'react-icons/fa';
 import { Fade } from 'react-awesome-reveal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../providers/AuthProvider';
 
 const formatDate = (dateString) => {
   if (!dateString) return "N/A";
@@ -11,17 +14,26 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-const LOCAL_STORAGE_KEY = "requestedGroups";
-
 const FeaturedGroups = () => {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  
+  const LOCAL_STORAGE_KEY = `requestedGroups_${user?.uid || "guest"}`;
+
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // localStorage 
   const [requestedGroups, setRequestedGroups] = useState(() => {
-    // LocalStorage থেকে আগের রিকোয়েস্টগুলো লোড করো
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
     return stored ? JSON.parse(stored) : [];
   });
-  const navigate = useNavigate();
+
+  // requestedGroups  localStorage update
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(requestedGroups));
+  }, [requestedGroups, LOCAL_STORAGE_KEY]);
 
   useEffect(() => {
     const demoGroups = [
@@ -58,7 +70,7 @@ const FeaturedGroups = () => {
         name: "Photography Field Trip",
         description: "Capture the beauty of Dhaka city with your lens. Beginners welcome!",
         image: "https://i.ibb.co/Fqj8cQbg/images-1.jpg",
-        startDate: "2025-8-20"
+        startDate: "2025-08-20"
       },
       {
         _id: 6,
@@ -83,7 +95,7 @@ const FeaturedGroups = () => {
   };
 
   const handleJoinClick = (group) => {
-    if (requestedGroups.includes(group._id)) return; 
+    if (requestedGroups.includes(group._id)) return;
 
     toast.success(`Your request to join "${group.name}" is approvable!`, {
       position: "top-center",
@@ -93,7 +105,6 @@ const FeaturedGroups = () => {
 
     const updatedRequested = [...requestedGroups, group._id];
     setRequestedGroups(updatedRequested);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedRequested));
 
     setTimeout(() => {
       navigate(`/future-group-details/${group._id}`, { state: group });
@@ -124,7 +135,6 @@ const FeaturedGroups = () => {
                   {group.description?.slice(0, 80) || 'No description available.'}
                   {group.description?.length > 80 && '...'}
                 </p>
-
                 <p className="text-sm text-gray-500 mb-4">
                   <strong>Start Date:</strong> {formatDate(group.startDate)}
                 </p>
