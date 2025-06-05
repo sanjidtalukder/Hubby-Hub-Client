@@ -1,7 +1,7 @@
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate } from 'react-router-dom';
 
 const FutureGroupDetails = () => {
-  const { id } = useParams();
+  // const { id } = useParams();
   const { state: group } = useLocation();
   const navigate = useNavigate();
 
@@ -47,9 +47,9 @@ const FutureGroupDetails = () => {
             day: 'numeric',
           })}
         </span>
-        <span className="mt-2 sm:mt-0">
+        {/* <span className="mt-2 sm:mt-0">
           <strong>Group ID:</strong> {id}
-        </span>
+        </span> */}
       </div>
 
       <button
