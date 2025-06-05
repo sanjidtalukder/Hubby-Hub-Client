@@ -112,7 +112,7 @@ const Groups = () => {
    };
  
    return (
-     <section className="px-4 py-10 bg-gray-50 min-h-screen">
+     <section className="max-w-7xl mx-auto p-6">
        {/* <h2 className="text-4xl font-bold text-center mb-12 text-primary">🌟 Featured Upcoming Groups</h2> */}
  
        {loading ? (
@@ -127,7 +127,7 @@ const Groups = () => {
                  <img
                    src={group.image}
                    alt={group.name}
-                   className="w-full h-48 object-cover rounded mb-3"
+                  className="w-full h-48 object-cover rounded-md mb-4"
                  />
                  <h3 className="text-xl font-semibold mb-1">{group.name}</h3>
                  <p className="text-sm text-gray-600 mb-1">Category: Hobby</p>
