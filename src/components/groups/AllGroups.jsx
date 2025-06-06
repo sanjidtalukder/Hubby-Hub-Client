@@ -47,16 +47,14 @@ const AllGroups = () => {
     <div className="p-6 mt-8 bg-white rounded-lg shadow">
       <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-700">All Groups</h2>
 
-     
       <div className="mt-8 p-6 bg-white rounded-lg shadow">
-  <Groups />
-</div>
-
+        <Groups />
+      </div>
 
       {loading ? (
         <p className="text-center text-gray-500 text-lg mt-12">Loading groups, please wait...</p>
       ) : groups.length === 0 ? (
-        <p className="text-center text-gray-600 text-lg mt-12">Waiting...</p>
+        <p className="text-center text-gray-600 text-lg mt-12">No groups found.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
           {groups.map(group => (

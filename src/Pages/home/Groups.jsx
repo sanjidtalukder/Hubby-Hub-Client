@@ -112,7 +112,7 @@ const Groups = () => {
    };
  
    return (
-     <section className="max-w-7xl mx-auto p-6">
+     <section className="max-w-7xl  ">
        {/* <h2 className="text-4xl font-bold text-center mb-12 text-primary">🌟 Featured Upcoming Groups</h2> */}
  
        {loading ? (
@@ -123,7 +123,7 @@ const Groups = () => {
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
            {groups.map(group => (
              <Fade key={group._id} triggerOnce>
-               <div className="border border-gray-200 rounded-lg p-5 shadow-md hover:shadow-lg transition bg-white">
+               <div className="border border-gray-200 w-full rounded-lg p-2 shadow-md hover:shadow-lg transition bg-white">
                  <img
                    src={group.image}
                    alt={group.name}
