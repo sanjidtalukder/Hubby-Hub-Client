@@ -89,7 +89,7 @@ Edit or delete groups you have created.
 If you face any issues or have questions, feel free to reach out:
 Md Sanjid Talukdar
 📧 mdsanjid@gmail.com
-🌐 GitHub - sanjidtalukder
+🌐 GitHub - https://github.com/sanjidtalukder
 
 📜 License
 This project is developed as part of the Programming Hero initiative.
