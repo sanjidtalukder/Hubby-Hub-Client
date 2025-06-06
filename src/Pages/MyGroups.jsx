@@ -11,7 +11,7 @@ const MyGroups = () => {
 
   useEffect(() => {
     if (userEmail) {
-      fetch(`http://localhost:5000/api/groups?creatorEmail=${userEmail}`)
+      fetch(`https://hobbyhub-server-delta.vercel.app/api/groups?creatorEmail=${userEmail}`)
         .then((res) => res.json())
         .then((data) => setGroups(data));
     }
@@ -29,7 +29,7 @@ const MyGroups = () => {
     const confirmDelete = confirm("Are you sure you want to delete this group?");
     if (!confirmDelete) return;
 
-    const res = await fetch(`http://localhost:5000/api/groups/${id}`, {
+    const res = await fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`, {
       method: "DELETE",
     });
     const data = await res.json();

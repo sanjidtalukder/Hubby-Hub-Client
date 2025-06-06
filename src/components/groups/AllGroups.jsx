@@ -11,7 +11,7 @@ const AllGroups = () => {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/groups');
+        const res = await fetch('https://hobbyhub-server-delta.vercel.app/api/groups');
         if (!res.ok) throw new Error('Network response was not ok');
         const data = await res.json();
         setGroups(data);
@@ -56,7 +56,7 @@ const AllGroups = () => {
       {loading ? (
         <p className="text-center text-gray-500 text-lg mt-12">Loading groups, please wait...</p>
       ) : groups.length === 0 ? (
-        <p className="text-center text-gray-600 text-lg mt-12">No groups available at the moment.</p>
+        <p className="text-center text-gray-600 text-lg mt-12">Waiting...</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
           {groups.map(group => (

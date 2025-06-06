@@ -13,7 +13,7 @@ const MyGroups = () => {
 
     const email = user.email.toLowerCase();
 
-    fetch(`http://localhost:5000/api/groups?creatorEmail=${email}`)
+    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups?creatorEmail=${email}`)
       .then(res => res.json())
       .then(data => setMyGroups(data))
       .catch(err => {
@@ -26,7 +26,7 @@ const MyGroups = () => {
     const confirmDelete = confirm("Are you sure you want to delete this group?");
     if (!confirmDelete) return;
 
-    fetch(`http://localhost:5000/api/groups/${id}`, {
+    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`, {
       method: "DELETE"
     })
       .then(res => res.json())

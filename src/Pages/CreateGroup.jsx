@@ -59,7 +59,7 @@ const CreateGroup = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/groups", {
+      const res = await fetch("https://hobbyhub-server-delta.vercel.app/api/groups", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

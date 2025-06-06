@@ -10,7 +10,7 @@ const UpdateGroup = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/groups/${id}`)
+    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`)
       .then(res => res.json())
       .then(data => {
         setGroup({
@@ -46,7 +46,7 @@ const UpdateGroup = () => {
       formData.append("image", file);
     }
 
-    fetch(`http://localhost:5000/api/groups/${id}`, {
+    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`, {
       method: "PUT",
       body: formData,
     })

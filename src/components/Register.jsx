@@ -42,7 +42,7 @@ const Register = () => {
 
       // Save user info to MongoDB
       const userInfo = { name, email, photo };
-      await axios.post('http://localhost:5000/users', userInfo);
+      await axios.post('https://hobbyhub-server-delta.vercel.app/users', userInfo);
 
       toast.success('Registration successful!');
       navigate('/');

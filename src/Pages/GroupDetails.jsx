@@ -26,7 +26,7 @@ const GroupDetails = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/groups/${id}`)
+    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`)
       .then(res => res.json())
       .then(data => {
         setGroup(data);
@@ -50,7 +50,7 @@ const GroupDetails = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/groups/${id}/join-request`, {
+      const res = await fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}/join-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
