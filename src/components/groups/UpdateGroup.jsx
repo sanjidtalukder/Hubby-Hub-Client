@@ -73,9 +73,9 @@ const UpdateGroup = () => {
       <Toaster position="top-center" />
       <h2 className="text-3xl font-bold mb-6 text-center text-indigo-600">✏️ Update Group</h2>
 
-      <form onSubmit={handleUpdate} className="space-y-5 bg-white p-6 rounded-xl shadow-lg">
+      <form onSubmit={handleUpdate} className="space-y-5 text-primary bg-gray-300 p-6 rounded-xl shadow-lg">
         <div>
-          <label className="block mb-1 font-semibold">Group Name</label>
+          <label className="block mb-1 text-primary font-semibold">Group Name</label>
           <input
             type="text"
             name="name"
@@ -92,7 +92,7 @@ const UpdateGroup = () => {
             value={group.description}
             onChange={handleChange}
             rows="4"
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="w-full border px-4 py-2 bg-gray-100 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
         </div>
 
@@ -103,7 +103,7 @@ const UpdateGroup = () => {
             name="category"
             value={group.category}
             onChange={handleChange}
-            className="w-full border px-4 py-2 rounded"
+            className="w-full border bg-gray-100 px-4 py-2 rounded"
           />
         </div>
 
@@ -114,7 +114,7 @@ const UpdateGroup = () => {
             name="startDate"
             value={group.startDate}
             onChange={handleChange}
-            className="w-full border px-4 py-2 rounded"
+            className="w-full border bg-gray-100 px-4 py-2 rounded"
           />
         </div>
 

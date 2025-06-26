@@ -55,6 +55,10 @@ const Navbar = () => {
            <NavLink to="/faq" className={linkClass} onClick={() => setMenuOpen(false)}>
             FAQ
           </NavLink>
+          {/* Dashboard */}
+          <NavLink to="/dashboard" className={linkClass} onClick={() => setMenuOpen(false)}>
+            Dashboard
+          </NavLink>
     </>
   );
 

@@ -14,6 +14,11 @@ import GroupDetails from '../Pages/GroupDetails';
 import FutureGroupDetails from '../Pages/FutureGroupDetails';
 import AboutUs from '../components/AboutUs';
 import FAQ from '../components/FAQ';
+import DashboardLayout from '../Pages/Dashboard/DashboardLayout';
+import Dashboard from '../Pages/Dashboard/Dashboard';
+import AllItems from '../Pages/Dashboard/AllItems';
+import AddItem from '../Pages/Dashboard/AddItem';
+import MyItems from '../Pages/Dashboard/MyItems';
 
 export const Router = createBrowserRouter([
   {
@@ -32,6 +37,16 @@ export const Router = createBrowserRouter([
       { path: 'aboutus', element: <PrivateRoute><AboutUs /></PrivateRoute> },
       { path: 'faq', element: <PrivateRoute><FAQ /></PrivateRoute> },
       { path: '*', element: <NotFound /> },
+    ],
+  },
+  {
+     path: '/dashboard',
+    element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+     children: [
+      { index: true, element: <Dashboard /> },
+      { path: 'all-items', element: <AllItems /> },
+      { path: 'add-item', element: <AddItem /> },
+      { path: 'my-items', element: <MyItems /> },
     ],
   },
 ]);
