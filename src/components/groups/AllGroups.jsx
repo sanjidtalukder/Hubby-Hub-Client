@@ -14,7 +14,17 @@ const AllGroups = () => {
         const res = await fetch('https://hobbyhub-server-delta.vercel.app/api/groups');
         if (!res.ok) throw new Error('Network response was not ok');
         const data = await res.json();
-        setGroups(data);
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const activeGroups = data.filter(group => {
+          const groupStartDate = new Date(group.startDate);
+          groupStartDate.setHours(0, 0, 0, 0);
+          return groupStartDate >= today;
+        });
+
+        setGroups(activeGroups);
       } catch (error) {
         console.error('Failed to fetch groups:', error);
       } finally {
@@ -24,15 +34,6 @@ const AllGroups = () => {
 
     fetchGroups();
   }, []);
-
-  const isGroupActive = (startDate) => {
-    if (!startDate) return false;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const groupStartDate = new Date(startDate);
-    groupStartDate.setHours(0, 0, 0, 0);
-    return groupStartDate >= today;
-  };
 
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
@@ -62,12 +63,23 @@ const AllGroups = () => {
               <div
                 className="border border-gray-300 rounded-lg p-6 shadow hover:shadow-lg transition bg-white flex flex-col"
               >
-                <img
+                {/* <img
                   src={group.imageUrl || 'https://i.ibb.co/2kR5zq0/default-avatar.png'}
                   alt={group.name}
                   className="w-full h-48 object-cover rounded-md mb-4"
+                /> */}
+
+                <img
+                    src={group.imageUrl || 'https://i.ibb.co/2kR5zq0/default-avatar.png'}
+                     onError={(e) => {
+                      e.target.onerror = null;
+                     e.target.src = 'https://i.ibb.co/2kR5zq0/default-avatar.png';
+                    }}
+                   alt={group.name}
+                  className="w-full h-48 object-cover rounded-md mb-4"
                 />
-                <h3 className="text-2xl font-semibold mb-2 text-gray-800">{group.name}</h3>
+
+                <h3 className="text-2xl font-semibold mb-2 text-blue-800">{group.name}</h3>
                 <p className="text-sm text-indigo-600 mb-1 font-medium">
                   Category: {group.category || 'Not specified'}
                 </p>
@@ -81,16 +93,12 @@ const AllGroups = () => {
                   <strong>Start Date:</strong> {formatDate(group.startDate)}
                 </p>
 
-                {isGroupActive(group.startDate) ? (
-                  <button
-                    onClick={() => navigate(`/group-details/${group._id}`)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition"
-                  >
-                    See More
-                  </button>
-                ) : (
-                  <p className="text-red-600 font-semibold text-center">This group is no longer active</p>
-                )}
+                <button
+                  onClick={() => navigate(`/group-details/${group._id}`)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition"
+                >
+                  See More
+                </button>
               </div>
             </Fade>
           ))}

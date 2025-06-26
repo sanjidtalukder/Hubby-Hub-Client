@@ -13,6 +13,7 @@ const UpdateGroup = () => {
     fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`)
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         setGroup({
           name: data.name || "",
           description: data.description || "",
@@ -41,15 +42,17 @@ const UpdateGroup = () => {
     const formData = new FormData();
     formData.append("name", group.name);
     formData.append("description", group.description);
-    formData.append("email", group.email);
+    // formData.append("email", group.email);
     if (file) {
       formData.append("image", file);
     }
 
-    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`, {
-      method: "PUT",
-      body: formData,
-    })
+   fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}/with-image`, {
+  method: "PUT",
+  body: formData,
+})
+
+
       .then(res => res.json())
       .then(data => {
         if (data.modifiedCount > 0) {

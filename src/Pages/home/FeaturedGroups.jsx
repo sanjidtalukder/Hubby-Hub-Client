@@ -129,12 +129,12 @@ const FeaturedGroups = () => {
                   alt={group.name}
                   className="w-full h-48 object-cover rounded mb-3"
                 />
-                <h3 className="text-xl font-semibold mb-1">{group.name}</h3>
-                <p className="text-sm text-gray-600 mb-1">Category: Hobby</p>
-                <p className="text-gray-700 mb-2">
+                <h3 className="text-xl font-semibold text-primary mb-1">{group.name}</h3>
+                <p className="text-sm text-gray-700 mb-1"><strong className='text-gray-500'>Category :</strong> Hobby</p>
+                {/* <p className="text-gray-700 mb-2">
                   {group.description?.slice(0, 80) || 'No description available.'}
                   {group.description?.length > 80 && '...'}
-                </p>
+                </p> */}
                 <p className="text-sm text-gray-500 mb-4">
                   <strong>Start Date:</strong> {formatDate(group.startDate)}
                 </p>
@@ -142,11 +142,12 @@ const FeaturedGroups = () => {
                 {isGroupActive(group.startDate) ? (
                   requestedGroups.includes(group._id) ? (
                     <button
-                      disabled
-                      className="btn btn-secondary w-full cursor-not-allowed"
-                    >
-                      Requested
-                    </button>
+            disabled
+            className="btn btn-secondary text-primary  bg-gray-500 dark:bg-gray-700 dark:text-primary w-full cursor-not-allowed"
+              >
+                Requested
+            </button>
+
                   ) : (
                     <button
                       onClick={() => handleJoinClick(group)}

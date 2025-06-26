@@ -1,141 +1,148 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../providers/AuthProvider';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const UpdateGroup = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
-
-  const [groupData, setGroupData] = useState({
-    name: '',
-    creatorEmail: '',
-    description: '',
-  });
-
-  const [image, setImage] = useState(null); // New state for image
+  const [group, setGroup] = useState({ name: "", description: "", email: "", category: "", startDate: "" });
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/groups/${id}`)
+    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`)
       .then(res => res.json())
       .then(data => {
-        setGroupData({
-          name: data.name,
-          creatorEmail: data.creatorEmail,
-          description: data.description || '',
+        setGroup({
+          name: data.name || "",
+          description: data.description || "",
+          email: data.creatorEmail || "",
+          category: data.category || "",
+          startDate: data.startDate || "",
         });
+        setLoading(false);
       })
-      .catch(err => console.error(err));
+      .catch(() => {
+        toast.error("Failed to load group info.");
+        setLoading(false);
+      });
   }, [id]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setGroupData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setGroup(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+  const handleFileChange = e => {
+    setFile(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = e => {
     e.preventDefault();
 
-    if (user?.email !== groupData.creatorEmail) {
-      alert('You are not authorized to update this group.');
-      return;
+    const formData = new FormData();
+    formData.append("name", group.name);
+    formData.append("description", group.description);
+    formData.append("email", group.email);
+    formData.append("category", group.category);
+    formData.append("startDate", group.startDate);
+    if (file) {
+      formData.append("image", file);
     }
 
-    try {
-      let response;
-
-      if (image) {
-        // If there's an image, use FormData and /with-image route
-        const formData = new FormData();
-        formData.append('name', groupData.name);
-        formData.append('description', groupData.description);
-        formData.append('image', image);
-
-        response = await fetch(`/api/groups/${id}/with-image`, {
-          method: 'PUT',
-          body: formData,
-        });
-      } else {
-        // No image, send JSON to normal update route
-        response = await fetch(`/api/groups/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: groupData.name,
-            description: groupData.description,
-          }),
-        });
-      }
-
-      if (response.ok) {
-        alert('Group updated successfully!');
-        navigate('/myGroups');
-      } else {
-        alert('Update failed. Please try again.');
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Failed to update group');
-    }
+    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}/with-image`, {
+      method: "PUT",
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.modifiedCount > 0) {
+          toast.success("Group updated successfully!");
+          setTimeout(() => navigate("/my-groups"), 1500);
+        } else {
+          toast("No changes made.", { icon: "ℹ️" });
+        }
+      })
+      .catch(() => toast.error("Failed to update group."));
   };
 
+  if (loading) return <p className="text-center mt-10">Loading group info...</p>;
+
   return (
-    <div className="max-w-lg mx-auto p-6 mt-8  rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Update Group</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4" encType="multipart/form-data">
-        <label className="flex flex-col">
-          Name:
+    <div className="max-w-xl mx-auto px-4 py-10">
+      <Toaster position="top-center" />
+      <h2 className="text-3xl font-bold mb-6 text-center text-indigo-600">✏️ Update Group</h2>
+
+      <form onSubmit={handleUpdate} className="space-y-5 bg-white p-6 rounded-xl shadow-lg">
+        <div>
+          <label className="block mb-1 font-semibold">Group Name</label>
           <input
             type="text"
             name="name"
-            value={groupData.name}
-            onChange={handleChange}
-            className="input input-bordered mt-1"
-            required
+            value={group.name}
+            disabled
+            className="w-full border px-4 py-2 rounded bg-gray-100 cursor-not-allowed"
           />
-        </label>
+        </div>
 
-        <label className="flex flex-col">
-          Email:
-          <input
-            type="email"
-            name="creatorEmail"
-            value={groupData.creatorEmail}
-           
-            className="input input-bordered mt-1"
-          />
-        </label>
-
-        <label className="flex flex-col">
-          Description:
+        <div>
+          <label className="block mb-1 font-semibold">Description</label>
           <textarea
             name="description"
-            value={groupData.description}
+            value={group.description}
             onChange={handleChange}
-            className="textarea textarea-bordered mt-1"
-            rows={4}
+            rows="4"
+            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
-        </label>
+        </div>
 
-        <label className="flex flex-col">
-          Group Image:
+        <div>
+          <label className="block mb-1 font-semibold">Category</label>
+          <input
+            type="text"
+            name="category"
+            value={group.category}
+            onChange={handleChange}
+            className="w-full border px-4 py-2 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-semibold">Start Date</label>
+          <input
+            type="date"
+            name="startDate"
+            value={group.startDate}
+            onChange={handleChange}
+            className="w-full border px-4 py-2 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-semibold">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={group.email}
+            disabled
+            className="w-full border px-4 py-2 rounded bg-gray-100 cursor-not-allowed"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-semibold">Upload Image</label>
           <input
             type="file"
-            name="image"
             accept="image/*"
-            onChange={handleImageChange}
-            className="file-input file-input-bordered mt-1"
+            onChange={handleFileChange}
+            className="w-full"
           />
-        </label>
+        </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded transition duration-200"
+        >
           Update Group
         </button>
       </form>

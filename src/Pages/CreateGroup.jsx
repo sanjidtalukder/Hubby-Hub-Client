@@ -35,51 +35,63 @@ const CreateGroup = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const {
-      name,
-      imageUrl,
-      category,
-      creatorEmail,
-      startDate,
-      meetingLocation,
-      maxMembers,
-    } = group;
+  e.preventDefault();
 
-    if (
-      !name ||
-      !imageUrl ||
-      !category ||
-      !creatorEmail ||
-      !startDate ||
-      !meetingLocation ||
-      !maxMembers
-    ) {
-      return toast.error("Please fill all required fields!");
-    }
+  const {
+    name,
+    imageUrl,
+    category,
+    creatorEmail,
+    startDate,
+    meetingLocation,
+    maxMembers,
+  } = group;
 
-    try {
-      const res = await fetch("https://hobbyhub-server-delta.vercel.app/api/groups", {
+  if (
+    !name ||
+    !category ||
+    !creatorEmail ||
+    !startDate ||
+    !meetingLocation ||
+    !maxMembers
+  ) {
+    return toast.error("Please fill all required fields!");
+  }
+
+  // ✅ Check and set default image
+  const finalGroup = {
+    ...group,
+    imageUrl:
+      imageUrl?.trim() ||
+      "https://i.ibb.co/2kR5zq0/default-avatar.png", // default fallback image
+  };
+
+  try {
+    const res = await fetch(
+      "https://hobbyhub-server-delta.vercel.app/api/groups",
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(group),
-      });
-
-      const data = await res.json();
-
-      if (data.insertedId) {
-        toast.success("Group created successfully!");
-        navigate("/groups");
-      } else {
-        toast.error("Failed to create group.");
+        body: JSON.stringify(finalGroup),
       }
-    } catch (error) {
-      console.error("Error creating group:", error);
-      toast.error("Something went wrong.");
+    );
+
+    const data = await res.json();
+
+    if (data.insertedId) {
+      toast.success("Group created successfully!");
+      navigate("/groups");
+    } else {
+      toast.error("Failed to create group.");
     }
-  };
+  } catch (error) {
+    console.error("Error creating group:", error);
+    toast.error("Something went wrong.");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-base-200 py-10 px-4">
@@ -94,14 +106,23 @@ const CreateGroup = () => {
             placeholder="Group Name"
             className="input input-bordered w-full"
           />
-          <input
+          {/* <input
             type="text"
             name="imageUrl"
             value={group.imageUrl}
             onChange={handleChange}
             placeholder="Group Image URL"
             className="input input-bordered w-full"
-          />
+          /> */}
+          <input
+  type="text"
+  name="imageUrl"
+  value={group.imageUrl}
+  onChange={handleChange}
+  placeholder="Group Image URL (optional)"
+  className="input input-bordered w-full"
+/>
+
           <input
             type="text"
             name="category"

@@ -70,10 +70,10 @@ const Navbar = () => {
             onClick={() => setMenuOpen(false)}
           >
             <img
-  src="https://mir-s3-cdn-cf.behance.net/projects/404/25c50e104102623.Y3JvcCwyOTUyLDIzMDksNTU1LDA.png"
-  alt="HobbyHub Logo"
-  className="w-10 h-10 object-cover rounded-full"
-/>
+              src="https://i.ibb.co/xKqyB8qk/hobbyhub.png"
+                alt="HobbyHub Logo"
+                className="w-10 h-10 object-cover rounded-full"
+            />
 
             HobbyHub
           </Link>

@@ -42,42 +42,42 @@ const Groups = () => {
          name: "Tech Innovators Meetup",
          description: "Join the brightest minds to explore AI, Robotics and future technology trends.",
          image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=800&q=80",
-         startDate: "2025-10-01"
+         startDate: "2026-10-01"
        },
        {
          _id: 2,
          name: "Art & Creativity Workshop",
          description: "Unleash your inner artist through group painting, sketching and exhibitions.",
          image: "https://images.unsplash.com/photo-1496317899792-9d7dbcd928a1?auto=format&fit=crop&w=800&q=80",
-         startDate: "2025-11-10"
+         startDate: "2027-11-10"
        },
        {
          _id: 3,
          name: "Adventure & Hiking Club",
          description: "Explore nature with fellow hikers. Upcoming trip: Bandarban hills!",
          image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
-         startDate: "2025-09-15"
+         startDate: "2026-09-15"
        },
        {
          _id: 4,
          name: "Book Lovers Gathering",
          description: "Discuss bestsellers and classics over coffee every weekend.",
          image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80",
-         startDate: "2025-12-25"
+         startDate: "2026-12-25"
        },
        {
          _id: 5,
          name: "Photography Field Trip",
          description: "Capture the beauty of Dhaka city with your lens. Beginners welcome!",
          image: "https://i.ibb.co/Fqj8cQbg/images-1.jpg",
-         startDate: "2025-08-20"
+         startDate: "2027-08-20"
        },
        {
          _id: 6,
          name: "Cooking & Cuisine Night",
          description: "Try new dishes, share your recipe and enjoy a flavorful evening.",
          image: "https://i.ibb.co/2Ym6yhHW/images-2.jpg",
-         startDate: "2025-10-05"
+         startDate: "2026-10-05"
        },
      ];
  
@@ -123,18 +123,18 @@ const Groups = () => {
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
            {groups.map(group => (
              <Fade key={group._id} triggerOnce>
-               <div className="border border-gray-200 w-full rounded-lg p-2 shadow-md hover:shadow-lg transition bg-white">
+               <div className="border border-gray-200 w-full rounded-lg p-2 shadow-md hover:shadow-lg transition">
                  <img
                    src={group.image}
                    alt={group.name}
                   className="w-full h-48 object-cover rounded-md mb-4"
                  />
-                 <h3 className="text-xl font-semibold mb-1">{group.name}</h3>
-                 <p className="text-sm text-gray-600 mb-1">Category: Hobby</p>
-                 <p className="text-gray-700 mb-2">
+                 <h3 className="text-xl text-primary font-semibold mb-1">{group.name}</h3>
+                 <p className="text-sm text-gray-600 mb-1"> <strong>Category :</strong> Hobby</p>
+                 {/* <p className="text-gray-700 mb-2">
                    {group.description?.slice(0, 80) || 'No description available.'}
                    {group.description?.length > 80 && '...'}
-                 </p>
+                 </p> */}
                  <p className="text-sm text-gray-500 mb-4">
                    <strong>Start Date:</strong> {formatDate(group.startDate)}
                  </p>
@@ -143,7 +143,7 @@ const Groups = () => {
                    requestedGroups.includes(group._id) ? (
                      <button
                        disabled
-                       className="btn btn-secondary w-full cursor-not-allowed"
+                       className="btn btn-secondary text-primary w-full cursor-not-allowed"
                      >
                        Requested
                      </button>
