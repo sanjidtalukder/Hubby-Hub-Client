@@ -1,124 +1,80 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const UpdateGroup = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [group, setGroup] = useState({ name: "", description: "", email: "" });
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [group, setGroup] = useState({
+    name: "",
+    description: "",
+    email: "",
+    creatorEmail: "" // Ensure this is present
+  });
+
+  const [thumbnail, setThumbnail] = useState(null);
 
   useEffect(() => {
-    fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data)
+    axios
+      .get(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}`)
+      .then((res) => {
+        const data = res.data;
         setGroup({
           name: data.name || "",
           description: data.description || "",
-          email: data.email || ""
+          email: data.creatorEmail || "",
+          creatorEmail: data.creatorEmail || "" //  set it here
         });
-        setLoading(false);
       })
-      .catch(() => {
-        toast.error("Failed to load group info.");
-        setLoading(false);
-      });
+      .catch((err) => console.error("Error fetching group:", err));
   }, [id]);
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setGroup(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = e => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleUpdate = e => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("name", group.name);
     formData.append("description", group.description);
-    // formData.append("email", group.email);
-    if (file) {
-      formData.append("image", file);
+    formData.append("creatorEmail", group.creatorEmail); 
+    if (thumbnail) {
+      formData.append("thumbnail", thumbnail);
     }
 
-   fetch(`https://hobbyhub-server-delta.vercel.app/api/groups/${id}/with-image`, {
-  method: "PUT",
-  body: formData,
-})
-
-
-      .then(res => res.json())
-      .then(data => {
-        if (data.modifiedCount > 0) {
-          toast.success("Group updated successfully!");
-          setTimeout(() => navigate("/my-groups"), 1500);
-        } else {
-          toast("No changes made.", { icon: "ℹ️" });
-        }
-      })
-      .catch(() => toast.error("Failed to update group."));
+    try {
+      const res = await axios.patch(
+        `https://hobbyhub-server-delta.vercel.app/api/groups/${id}/with-image`,
+        formData
+      );
+      console.log("Updated successfully:", res.data);
+    } catch (error) {
+      console.error("Update failed:", error.response?.data || error.message);
+    }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading group info...</p>;
-
   return (
-    <div className="max-w-xl mx-auto px-4 py-10">
-      <Toaster position="top-center" />
-      <h2 className="text-3xl font-bold mb-6 text-center text-indigo-600">✏️ Update Group</h2>
-
-      <form onSubmit={handleUpdate} className="space-y-5 bg-white p-6 rounded-xl shadow-lg">
-        <div>
-          <label className="block mb-1 font-semibold">Group Name</label>
-          <input
-            type="text"
-            name="name"
-            value={group.name}
-            disabled
-            className="w-full border px-4 py-2 rounded bg-gray-100 cursor-not-allowed"
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1 font-semibold">Description</label>
-          <textarea
-            name="description"
-            value={group.description}
-            onChange={handleChange}
-            rows="4"
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1 font-semibold">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={group.email}
-            disabled
-            className="w-full border px-4 py-2 rounded bg-gray-100 cursor-not-allowed"
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1 font-semibold">Upload Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full"
-          />
-        </div>
-
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Update Group</h2>
+      <form onSubmit={handleUpdate} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Group Name"
+          value={group.name}
+          onChange={(e) => setGroup({ ...group, name: e.target.value })}
+          className="border p-2 w-full"
+        />
+        <textarea
+          placeholder="Description"
+          value={group.description}
+          onChange={(e) => setGroup({ ...group, description: e.target.value })}
+          className="border p-2 w-full"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setThumbnail(e.target.files[0])}
+          className="border p-2 w-full"
+        />
         <button
           type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded transition duration-200"
+          className="bg-blue-600 text-white px-4 py-2 rounded"
         >
           Update Group
         </button>

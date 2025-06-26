@@ -32,15 +32,25 @@ Welcome to the **HobbyHub Client** — a user-friendly frontend application wher
 
 📦 HobbyHub Client
 ├── public/ # Static files like index.html
+
 ├── src/
+
 │ ├── components/ # Reusable UI components
+
 │ ├── pages/ # Page components (Home, Groups, Profile, etc.)
+
 │ ├── services/ # API calls and utilities
+
 │ ├── App.js # Main app component with routes
+
 │ ├── index.js # Entry point
+
 │ └── styles/ # CSS or styling files
+
 ├── package.json # Project metadata & dependencies
+
 └── README.md # This file
+
 
 yaml
 Copy
