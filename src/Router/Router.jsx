@@ -19,6 +19,7 @@ import Dashboard from '../Pages/Dashboard/Dashboard';
 import AllItems from '../Pages/Dashboard/AllItems';
 import AddItem from '../Pages/Dashboard/AddItem';
 import MyItems from '../Pages/Dashboard/MyItems';
+import GroupsByCategory from '../Pages/home/GroupsByCategory';
 
 export const Router = createBrowserRouter([
   {
@@ -35,6 +36,7 @@ export const Router = createBrowserRouter([
       { path: 'group-details/:id', element: <PrivateRoute><GroupDetails /></PrivateRoute> },
       { path: 'future-group-details/:id', element: <PrivateRoute><FutureGroupDetails /></PrivateRoute> },
       { path: 'aboutus', element: <PrivateRoute><AboutUs /></PrivateRoute> },
+      { path: "/groups/:category", element: <PrivateRoute><GroupsByCategory /></PrivateRoute>},
       { path: 'faq', element: <PrivateRoute><FAQ /></PrivateRoute> },
       { path: '*', element: <NotFound /> },
     ],
