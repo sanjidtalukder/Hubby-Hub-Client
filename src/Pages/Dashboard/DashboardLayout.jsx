@@ -33,7 +33,7 @@ const DashboardLayout = () => {
 
       <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 pt-16">
         <aside
-          className={`fixed left-0 h-full bg-blue-900 text-white p-6
+          className={`fixed left-0 h-full bg-blue-900 z-30 text-white p-6
             transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             transition-transform duration-300 ease-in-out
             md:translate-x-0 md:static md:flex-shrink-0 md:w-64`}

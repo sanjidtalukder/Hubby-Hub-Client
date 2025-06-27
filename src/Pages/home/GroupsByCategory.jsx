@@ -39,7 +39,7 @@ const GroupsByCategory = () => {
       ) : error ? (
         <p className="text-center text-red-500">{error}</p>
       ) : groups.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8">
           {groups.map((group) => (
             <div
               key={group._id}
